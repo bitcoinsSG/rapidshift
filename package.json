@@ -1,0 +1,32 @@
+{
+  "name": "rapidshift",
+  "version": "0.0.1",
+  "description": "nodejs cli for automating enmasse shapeshift.io cryptocurrency exchange",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "rapidshift": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bitcoinsSG/rapidshift.git"
+  },
+  "author": "Gaurav S.J.B. Rana (bitcoinssg@gmail.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bitcoinsSG/rapidshift/issues"
+  },
+  "homepage": "https://github.com/bitcoinsSG/rapidshift#readme",
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "co": "^4.6.0",
+    "co-prompt": "^1.0.0",
+    "commander": "^2.9.0",
+    "moment": "^2.12.0",
+    "q": "^1.4.1",
+    "shapeshift.io": "^1.1.0",
+    "superagent": "^1.8.3"
+  }
+}
