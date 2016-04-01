@@ -26,7 +26,7 @@ gchecks.checkall(program)
 .then(function(){
 	var deferred = Q.defer();
 	process.stdout.write("\n");
-	console.log(accounting);
+	//console.log(accounting);
 	console.log("");
 	deferred.resolve(program);
 	return deferred.promise;
@@ -55,7 +55,7 @@ gchecks.checkall(program)
 				  }
 
 				  var depositAddress = returnData.deposit
-				  console.log(returnData);
+				  //console.log(returnData);
 
 				  console.log("");
 				  console.log( "send upto " + chalk.green(deposit_limit) + " to " + chalk.green(depositAddress) );
