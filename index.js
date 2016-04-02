@@ -20,18 +20,13 @@ program
  .parse(process.argv);
 
 console.log(chalk.dim('[' + moment().format('hh:mm:ss a') +']:') + '	welcome to rapidshift version ' + program._version + ' - @bitcoinssg');
-accounting.populateBeforeExchange(program.pair); // start populating stats asyncly, if error, gchecks will catch it.
 gchecks.checkall(program)
-.then(accounting.populateForExchangefromShapeshift(program.pair))
+.then(accounting.populateBeforeExchange)
 .then(function(){
-	var deferred = Q.defer();
-	process.stdout.write("\n");
 	//console.log(accounting);
-	console.log("");
-	deferred.resolve(program);
-	return deferred.promise;
+	printExchangeInfo(accounting);
 })
-.then(function(program){
+.then(function(){
 	var deposit_limit = 0;
 	shapeshift.marketInfo(program.pair, function (err, marketInfo) {
 	  if(err){
@@ -74,6 +69,23 @@ gchecks.checkall(program)
 });
 
 
+
+function printExchangeInfo(accounting){
+	var deferred = Q.defer();
+	console.log('');
+	console.log(chalk.dim('[' + moment().format('hh:mm:ss a') +']:	') + accounting.sourceCoin.fullname + ' price: ($'+ accounting.sourceCoin.priceFromExternal_USD + ')');
+	console.log(chalk.dim('[' + moment().format('hh:mm:ss a') +']:	') + '	' + '|');
+	console.log(chalk.dim('[' + moment().format('hh:mm:ss a') +']:	') + '	' + 'V');
+	console.log(chalk.dim('[' + moment().format('hh:mm:ss a') +']:	') + 
+		accounting.destinationCoin.fullname + ' price: ($'+ accounting.destinationCoin.priceFromExternal_USD + ')	'  + 
+		' implied price: ' + '($' + accounting.destinationCoin.priceProposedDuringExchange_USD + ') = ' +
+		accounting.expectedVsActual.percentageOfExpected+ '%');
+	return deferred.promise;
+}
+
+
+
+
 function loopforcompletestatus(depositAddress, counts ){
 	var shift_status = "no_deposits";
 	var counts = counts || { no_deposits: 0, received: 0, complete: 0};
@@ -81,15 +93,15 @@ function loopforcompletestatus(depositAddress, counts ){
 		//shapeshift.status(depositAddress, function (err, status, data) {
 		mockfunctions.mockshapeshiftstatus(depositAddress, function (err, status, data) {
 		   if(status == "no_deposits"){ 
-		   	(counts.no_deposits == 0) ? process.stdout.write('[' + moment().format('hh:mm:ss a') + ']' + chalk.red(":-\\  	waiting for deposit 	")) : process.stdout.write(chalk.red("."));
+		   	(counts.no_deposits == 0) ? process.stdout.write(chalk.dim('[' + moment().format('hh:mm:ss a') +']:	')+ chalk.red(":-\\  	waiting for deposit 	")) : process.stdout.write(chalk.red("."));
 		   	 counts.no_deposits++;
 		   }
 		   else if(status == "received"){
-		   	(counts.received == 0) ?process.stdout.write('\n' + '[' + moment().format('hh:mm:ss a') + ']' + chalk.yellow(":-| 	"  + data.incomingCoin + " " + data.incomingType + " received 	")) : process.stdout.write(chalk.yellow("."));
+		   	(counts.received == 0) ?process.stdout.write('\n' + chalk.dim('[' + moment().format('hh:mm:ss a') +']:	') + chalk.yellow(":-| 	"  + data.incomingCoin + " " + data.incomingType + " received 	")) : process.stdout.write(chalk.yellow("."));
 		   	counts.received++;
 		   }
 		   else if(status == "complete"){
-		   	process.stdout.write('\n' + '[' + moment().format('hh:mm:ss a') + ']' + chalk.green(":-) 	")); 
+		   	process.stdout.write('\n' + chalk.dim('[' + moment().format('hh:mm:ss a') +']:	') + chalk.green(":-) 	")); 
 		   	console.log(chalk.green(data.outgoingCoin) + " " + chalk.green(data.outgoingType + " sent 	✓"));
 		   	console.log("");
 		   	console.log("");
