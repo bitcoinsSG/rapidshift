@@ -55,8 +55,7 @@ function shiftwithpromise(options){
 			console.log(err);
 		}
 		else{
-		  console.log("");
-		  console.log("");
+		  console.log( chalk.dim('[' + moment().format('hh:mm:ss a') +']:	')); 
 		  console.log( chalk.dim('[' + moment().format('hh:mm:ss a') +']:	') +
 		   		 "Send " + accounting.sourceCoin.fullname + ":	" + chalk.bgBlue(accounting.exchangeLimit.amount) + " (MAX)");
 		  if(accounting.sourceCoin.symbol == 'xmr')
@@ -68,8 +67,7 @@ function shiftwithpromise(options){
 		   else{
 		   		console.log( chalk.dim('[' + moment().format('hh:mm:ss a') +']:	')  +"Address:	" + chalk.bgBlue(returnData.deposit) );
 		   }
-		  console.log("");
-		  console.log("");
+		  console.log( chalk.dim('[' + moment().format('hh:mm:ss a') +']:	'));
 		  //console.log(returnData);
 		  accounting.depositAddress = returnData.deposit;
 		  //loopforcompletestatus(returnData.deposit);
@@ -104,11 +102,12 @@ function prepareOptionsForShiftApi(){
 
 function printExchangeAfterExchange(){
 	var deferred = Q.defer();
-	console.log('');
 	console.log(chalk.dim('[' + moment().format('hh:mm:ss a') +']:	') + 
 		accounting.destinationCoin.fullname + ' price: ($'+ accounting.destinationCoin.priceFromExternal_USD + ')	'  + 
-		' actual price: ' + '($' + accounting.destinationCoin.priceCostAfterExchange_USD + ') = ' +
+		'actual price: ' + '($' + accounting.destinationCoin.priceCostAfterExchange_USD + ') = ' +
 		accounting.percentages.percentCostAfterExchange + '%' );
+	console.log("");
+	console.log("");
 	deferred.resolve();
 	return deferred.promise;
 }
@@ -139,17 +138,16 @@ function loopforcompletestatus(counts,callback){
 		shapeshift.status(depositAddress, function (err, status, data) {
 		//mockfunctions.mockshapeshiftstatus(depositAddress, function (err, status, data) {
 		   if(status == "no_deposits"){ 
-		   	(counts.no_deposits == 0) ? process.stdout.write(chalk.dim('[' + moment().format('hh:mm:ss a') +']:	')+ "waiting for deposit 	") : process.stdout.write(chalk.red("."));
+		   	(counts.no_deposits == 0) ? process.stdout.write(chalk.dim('[' + moment().format('hh:mm:ss a') +']:	')+ "waiting for deposit		") : process.stdout.write(chalk.red("."));
 		   	 counts.no_deposits++;
 		   }
 		   else if(status == "received"){
-		   	(counts.received == 0) ?process.stdout.write('\n' + chalk.dim('[' + moment().format('hh:mm:ss a') +']:	')  + data.incomingCoin + " " + data.incomingType + " received 	") : process.stdout.write(chalk.yellow("."));
+		   	(counts.received == 0) ?process.stdout.write('\n' + chalk.dim('[' + moment().format('hh:mm:ss a') +']:	')  + data.incomingCoin + " " + data.incomingType + " received		") : process.stdout.write(chalk.yellow("."));
 		   	counts.received++;
 		   }
 		   else if(status == "complete"){
 		   	process.stdout.write('\n' + chalk.dim('[' + moment().format('hh:mm:ss a') +']:	')); 
-		   	console.log(data.outgoingCoin + " " + data.outgoingType + "	sent	" + chalk.bgGreen("Success"));
-		   	console.log('');
+		   	console.log(data.outgoingCoin + " " + data.outgoingType + " sent		" + chalk.bgGreen("Success"));
 		   	accounting.populateAfterExchange(data).then(function(returneddata){
 		   		callback();
 		   	})
