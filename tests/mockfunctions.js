@@ -34,7 +34,7 @@ function mockshapeshiftstatus(depositAddress, callback){
 	}
 	else if( count > (threshold-1) && count < (threshold*3)){
 		count++;
-		var receiveddata =  { status: 'received',  address: '1H4vW9wcgr5i6LVsYMTuz449ci7ZWSyX6F', incomingCoin: 50.0 ,incomingType: 'ETH' };
+		var receiveddata =  { status: 'received',  address: '1H4vW9wcgr5i6LVsYMTuz449ci7ZWSyX6F', incomingCoin: 50.0345 ,incomingType: 'ETH' };
 		callback(null,'received',receiveddata);
 	}
 	else if( count > ((threshold*3)-1)){
