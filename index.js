@@ -59,8 +59,8 @@ gchecks.checkall(program)
 
 function shiftwithpromise(options){
 	var deferred = Q.defer();
-	mockfunctions.mockshapeshiftshift(program.destination, program.pair, options, function (err, returnData) {
-	//shapeshift.shift(program.destination, program.pair, options, function (err, returnData) {
+	//mockfunctions.mockshapeshiftshift(program.destination, program.pair, options, function (err, returnData) {
+	shapeshift.shift(program.destination, program.pair, options, function (err, returnData) {
 		if(err){
 			console.log('there was an error during shift');
 			console.log(err);
@@ -156,8 +156,8 @@ function loopforcompletestatus(counts,callback){
 	// this next if statetement could have been inside the loop, but want the delay in printing.
 	(counts.no_deposits == 0) ? process.stdout.write(printTemplates.printTimeStamp() + "awaiting deposit		" ) : null;
 	setTimeout(function(){
-		mockfunctions.mockshapeshiftstatus(depositAddress, function (err, status, data) {
-		//shapeshift.status(depositAddress, function (err, status, data) {
+		//mockfunctions.mockshapeshiftstatus(depositAddress, function (err, status, data) {
+		shapeshift.status(depositAddress, function (err, status, data) {
 		   if(status == "no_deposits"){ 
 		   	(counts.no_deposits == 0) ? null : process.stdout.write(chalk.red(chalk.bold(".")));
 		   	 counts.no_deposits++;
