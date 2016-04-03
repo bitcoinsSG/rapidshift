@@ -43,7 +43,7 @@ rapidshift --help
 
 
 	example 1 : rapidshift --refund  12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX --destination 0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae --pair btc_eth 
-	example 1 : rapidshift --refund  1HLoD9E4SDFFPDiYfNYnkBLQ85Y51J3Zb1 --destination LSdTvMHRm8sScqwCi6x9wzYQae8JeZhx6y --pair btc_ltc --qrcode show 
+	example 2 : rapidshift --refund  1HLoD9E4SDFFPDiYfNYnkBLQ85Y51J3Zb1 --destination LSdTvMHRm8sScqwCi6x9wzYQae8JeZhx6y --pair btc_ltc --qrcode show 
 
 
   Options:

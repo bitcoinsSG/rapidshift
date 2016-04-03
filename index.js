@@ -26,6 +26,7 @@ program
  .option('-p, --pair ' + chalk.red('<required>') ,'pair in conversion (e.g. bitcoin to ether; btc_eth)')
  .option('-q, --qrcode [show] ' + chalk.yellow('<optional>') , 'execute this if you want the qr codes to show up for payments.')
  .option('-m, --minimum [amount in USD] ' + chalk.yellow('<optional>'), 'if you only want to execute an exchange that is greater than a certian USD amount.')
+ .option('-X, --mock [yes]' + chalk.yellow('<optional>'), 'use this to run a fake/mock execution [for devs only].')
  .parse(process.argv);
 
 console.log("");
@@ -59,8 +60,9 @@ gchecks.checkall(program)
 
 function shiftwithpromise(options){
 	var deferred = Q.defer();
-	//mockfunctions.mockshapeshiftshift(program.destination, program.pair, options, function (err, returnData) {
-	shapeshift.shift(program.destination, program.pair, options, function (err, returnData) {
+	// if mock/fake mode, run mock function instead or real one
+	(program.mock) ? _shapeshiftshift = mockfunctions.mockshapeshiftshift : _shapeshiftshift = shapeshift.shift;
+	_shapeshiftshift(program.destination, program.pair, options, function (err, returnData) {
 		if(err){
 			console.log('there was an error during shift');
 			console.log(err);
@@ -135,11 +137,11 @@ function printExchangeAfterExchange(){
 function printExchangeInfoBeforeExchange(){
 	var deferred = Q.defer();
 	console.log('');
-	console.log(printTemplates.printTimeStamp() + accounting.sourceCoin.fullname + ' price: ($'+ accounting.sourceCoin.priceFromExternal_USD + ')');
+	console.log(printTemplates.printTimeStamp() + accounting.sourceCoin.fullname.toLowerCase() + ' price: ($'+ accounting.sourceCoin.priceFromExternal_USD + ')');
 	console.log(printTemplates.printTimeStamp() + '   |');
 	console.log(printTemplates.printTimeStamp() + '   V');
 	console.log(printTemplates.printTimeStamp() + 
-		accounting.destinationCoin.fullname + ' price: ($'+ accounting.destinationCoin.priceFromExternal_USD + ')	'  + 
+		accounting.destinationCoin.fullname.toLowerCase() + ' price: ($'+ accounting.destinationCoin.priceFromExternal_USD + ')	'  + 
 		' implied price: ' + '($' + accounting.destinationCoin.priceProposedDuringExchange_USD + ') = ' +
 		accounting.percentages.percentProposedDuringExchange + '%');
 	deferred.resolve();
@@ -156,8 +158,10 @@ function loopforcompletestatus(counts,callback){
 	// this next if statetement could have been inside the loop, but want the delay in printing.
 	(counts.no_deposits == 0) ? process.stdout.write(printTemplates.printTimeStamp() + "awaiting deposit		" ) : null;
 	setTimeout(function(){
-		//mockfunctions.mockshapeshiftstatus(depositAddress, function (err, status, data) {
-		shapeshift.status(depositAddress, function (err, status, data) {
+		// if mock/fake mode, run mock function instead or real one
+		(program.mock) ? _shapeshiftstatus = mockfunctions.mockshapeshiftstatus : _shapeshiftstatus = shapeshift.status;
+		var _shapeshiftstatus = mockfunctions.mockshapeshiftstatus;
+		_shapeshiftstatus(depositAddress, function (err, status, data) {
 		   if(status == "no_deposits"){ 
 		   	(counts.no_deposits == 0) ? null : process.stdout.write(chalk.red(chalk.bold(".")));
 		   	 counts.no_deposits++;
