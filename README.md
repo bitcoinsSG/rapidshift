@@ -1,6 +1,6 @@
 attn: this repo is in alpha mode, use at your own risk.
 
-rapidshift (alpha v 0.0.3)
+rapidshift (alpha v 0.0.4)
 =====================
 
 simple nodejs cli that converts between cryptocurrencies
@@ -36,26 +36,26 @@ rapidshift --refund  1HLoD9E4SDFFPDiYfNYnkBLQ85Y51J3Zb1 --destination LSdTvMHRm8
 help
 =====================
 ```bash
-rapidshift --help
-
+rapidshift --help                                                                                                                                       
 
   Usage: rapidshift --refund <your refund address> --destination <your withdrawl address> --pair <symbolOfSourceCoin_symbolOfDestinatinCoin> --[other options] 
 
 
-	example 1 : rapidshift --refund  12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX --destination 0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae --pair btc_eth 
-	example 2 : rapidshift --refund  1HLoD9E4SDFFPDiYfNYnkBLQ85Y51J3Zb1 --destination LSdTvMHRm8sScqwCi6x9wzYQae8JeZhx6y --pair btc_ltc --qrcode show 
+  example 1 : rapidshift --refund  12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX --destination 0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae --pair btc_eth 
+  example 2 : rapidshift --refund  1HLoD9E4SDFFPDiYfNYnkBLQ85Y51J3Zb1 --destination LSdTvMHRm8sScqwCi6x9wzYQae8JeZhx6y --pair btc_ltc --qrcode show 
 
 
   Options:
 
-    -h, --help                                output usage information
-    -V, --version                             output the version number
-    -d, --destination <required>    address where you want your funds sent after exchange.
-    -r, --refund <required>         your refund address
-    -x, --extra <optional>          extra data required for special exchanges
-    -p, --pair <required>           pair in conversion (e.g. bitcoin to ether; btc_eth)
-    -q, --qrcode [show] <optional>  execute this if you want the qr codes to show up for payments.
-
+    -h, --help                                          output usage information
+    -V, --version                                       output the version number
+    -d, --destination <required>              address where you want your funds sent after exchange.
+    -r, --refund <required>                   your refund address incase anything goes wrong during an exchange
+    -p, --pair <required>                     pair in conversion, using official symbols (e.g. bitcoin to ether; btc_eth, dash to ether; dash_eth)
+    -x, --extra <optional>                    extra data required for special exchanges
+    -q, --qrcode [show] <optional>            execute this if you want the qr codes to show up for payments
+    -m, --minimum [amount in USD] <optional>  minimum threshold on USD exchanged
+    -X, --mock [yes] <optional>               use this to run a fake/mock execution [for devs]
 
 ```
 
