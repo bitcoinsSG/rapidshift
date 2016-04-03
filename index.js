@@ -9,21 +9,27 @@ const moment = require('moment');
 const gchecks = require('./lib/checks');
 const accounting = require('./lib/accounting');
 const mockfunctions = require('./tests/mockfunctions');
+const qrcode = require('qrcode-terminal');
 var timeTracking = {start: moment().format('hh:mm:ss a')};
 
 program
- .version('0.0.1')
- .option('-d, --destination ' + chalk.red('<required>'), 'The address where you want your funds sent after exchange.')
- .option('-r, --refund '+ chalk.red('<required>'), 'The refund address')
- .option('-x, --extra ' + chalk.yellow('<optional>') , 'The extra data required for special exchanges')
- .option('-p, --pair ' + chalk.red('<required>') ,'The pair in conversion (e.g. bitcoin to ether; btc_eth)')
+ .version('0.0.3')
+ .usage('--refund <your refund address> --destination <your withdrawl address> --pair <symbolOfSourceCoin_symbolOfDestinatinCoin> --[other options] \n\n\n' +
+ 	'	example 1 : rapidshift --refund  ' + chalk.cyan(chalk.bold('12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX')) + ' --destination ' + chalk.cyan(chalk.bold('0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae')) +' --pair ' + chalk.cyan(chalk.bold('btc_eth'))+' \n' +
+ 	'	example 1 : rapidshift --refund  ' + chalk.cyan(chalk.bold('1HLoD9E4SDFFPDiYfNYnkBLQ85Y51J3Zb1')) + ' --destination ' + chalk.cyan(chalk.bold('LSdTvMHRm8sScqwCi6x9wzYQae8JeZhx6y')) +' --pair ' + chalk.cyan(chalk.bold('btc_ltc'))+ ' --qrcode ' + chalk.cyan(chalk.bold('show'))+' \n' )
+ .option('-d, --destination ' + chalk.red('<required>'), 'address where you want your funds sent after exchange.')
+ .option('-r, --refund '+ chalk.red('<required>'), 'your refund address')
+ .option('-x, --extra ' + chalk.yellow('<optional>') , 'extra data required for special exchanges')
+ .option('-p, --pair ' + chalk.red('<required>') ,'pair in conversion (e.g. bitcoin to ether; btc_eth)')
+ .option('-q, --qrcode [show] ' + chalk.yellow('<optional>') , 'execute this if you want the qr codes to show up for payments.')
+ .option('-m, --minimum [amount in USD] ' + chalk.yellow('<optional>'), 'if you only want to execute an exchange that is greater than a certian USD amount.')
  .parse(process.argv);
 
-console.log(chalk.dim('[' + moment().format('hh:mm:ss a') +']:') + '	welcome to rapidshift version ' + program._version + ' - @bitcoinssg');
+console.log(chalk.dim('[' + moment().format('hh:mm:ss a') +']:') + '	rapidshift version ' + program._version + '		 - @bitcoinssg');
 gchecks.checkall(program)
 .then(accounting.populateBeforeExchange)
 .then(printExchangeInfoBeforeExchange)
-.then(prepareOptionsForShiftApi)
+.then(prepareForShiftApi)
 .then(shiftwithpromise)
 .then(function(){
 	loopforcompletestatus({ no_deposits: 0, received: 0, complete: 0}, function(){
@@ -32,7 +38,7 @@ gchecks.checkall(program)
 })
 .catch(function(err){
 	process.stdout.write("\n\n");
-	process.stdout.write('\n' + '[' + moment().format('hh:mm:ss a') +']'+ chalk.red('	error: 	') +  chalk.red(err));
+	console.log(chalk.dim('[' + moment().format('hh:mm:ss a') +']:	') + chalk.bgRed('error: 	') +  chalk.bgRed(err))
 	process.stdout.write("\n\n\n");
 
 });
@@ -48,30 +54,38 @@ gchecks.checkall(program)
 
 function shiftwithpromise(options){
 	var deferred = Q.defer();
-	//mockfunctions.mockshapeshiftshift(program.destination, program.pair, options, function (err, returnData) {
-	shapeshift.shift(program.destination, program.pair, options, function (err, returnData) {
+	mockfunctions.mockshapeshiftshift(program.destination, program.pair, options, function (err, returnData) {
+	//shapeshift.shift(program.destination, program.pair, options, function (err, returnData) {
 		if(err){
 			console.log('there was an error during shift');
 			console.log(err);
 		}
 		else{
-		  console.log( chalk.dim('[' + moment().format('hh:mm:ss a') +']:	')); 
-		  console.log( chalk.dim('[' + moment().format('hh:mm:ss a') +']:	') +
-		   		 "Send " + accounting.sourceCoin.fullname + ":	" + chalk.bgBlue(accounting.exchangeLimit.amount) + " (MAX)");
-		  if(accounting.sourceCoin.symbol == 'xmr')
-			{
-				// when monero is source handle payment id from shapeshift
-				console.log( chalk.dim('[' + moment().format('hh:mm:ss a') +']:	')  +"Address:	" + chalk.bgBlue(returnData.sAddress));
-				console.log( chalk.dim('[' + moment().format('hh:mm:ss a') +']:	') +  "paymentID:	" + chalk.bgWhite(chalk.black(returnData.deposit)));
-			}
-		   else{
-		   		console.log( chalk.dim('[' + moment().format('hh:mm:ss a') +']:	')  +"Address:	" + chalk.bgBlue(returnData.deposit) );
-		   }
-		  console.log( chalk.dim('[' + moment().format('hh:mm:ss a') +']:	'));
-		  //console.log(returnData);
-		  accounting.depositAddress = returnData.deposit;
-		  //loopforcompletestatus(returnData.deposit);
-		  deferred.resolve()
+			  console.log( chalk.dim('[' + moment().format('hh:mm:ss a') +']:	')); 
+			  console.log( chalk.dim('[' + moment().format('hh:mm:ss a') +']:	') +
+			   		 "Send " + accounting.sourceCoin.fullname + ":	" + chalk.bgBlue(accounting.exchangeLimit.amount) + 
+			   		 "  ( $" + (parseFloat(accounting.exchangeLimit.amount) * accounting.sourceCoin.priceFromExternal_USD).toFixed(2) + ") MAX");
+			  if(accounting.sourceCoin.symbol == 'xmr')
+				{
+					// when monero is source handle payment id from shapeshift
+					console.log( chalk.dim('[' + moment().format('hh:mm:ss a') +']:	')  +"Address:	" + chalk.bgBlue(returnData.sAddress));
+					console.log( chalk.dim('[' + moment().format('hh:mm:ss a') +']:	') +  "paymentID:	" + chalk.bgWhite(chalk.black(returnData.deposit)));
+				}
+			   else{
+			   	    console.log( chalk.dim('[' + moment().format('hh:mm:ss a') +']:	')  +"Address:	" + chalk.bgBlue(returnData.deposit) );
+			   	   	if(program.qrcode){
+			  			//qrcode.generate(returnData.deposit);
+			  			
+						qrcode.generate(returnData.deposit, function (qrcode) {
+							console.log("");
+						    console.log(qrcode);
+						    console.log("");
+						});
+			  		}
+			   }
+			  console.log( chalk.dim('[' + moment().format('hh:mm:ss a') +']:	'));
+			  accounting.depositAddress = returnData.deposit;
+			  deferred.resolve()
 		}
 	});
 	return deferred.promise;
@@ -81,20 +95,20 @@ function shiftwithpromise(options){
 
 
 // extra preparation for multiple coin type handling
-function prepareOptionsForShiftApi(){  
+function prepareForShiftApi(){  
 	var deferred = Q.defer();
 	var options = { returnAddress: program.refund };
-	if(accounting.exchangeLimit.amount > 0){
+	if(accounting.exchangeLimit.amount > accounting.minimumAcceptableExchangeLimit.sourceCoinUnits){
 		if(accounting.destinationCoin.symbol == 'xmr')
 		{
-			// treat monero is destination coin then prepare with payment id in options
 			// turns out we don't need to do anything from out side when we're receiving monero
-			// when we are sending monero a payment id is received and handled by the output
+			// when we are sending monero a payment id is received and handled by shiftwithpromise()
 		}
 		deferred.resolve(options);
 	}
 	else{
-		deferred.reject("Shapeshift limit is 0, try again in a few minutes.")
+		deferred.reject("Shapeshift limit is:  " + parseFloat(accounting.exchangeLimit.amount) + ", or $"  + (parseFloat(accounting.exchangeLimit.amount) * parseFloat(accounting.sourceCoin.priceFromExternal_USD)).toFixed(2)  + 
+			" which is not greater than min threshold of $" + accounting.minimumAcceptableExchangeLimit.USD);
 	}
 
 	return deferred.promise;
@@ -135,8 +149,8 @@ function loopforcompletestatus(counts,callback){
 	var depositAddress = accounting.depositAddress;
 	var counts = counts || { no_deposits: 0, received: 0, complete: 0};
 	setTimeout(function(){
-		shapeshift.status(depositAddress, function (err, status, data) {
-		//mockfunctions.mockshapeshiftstatus(depositAddress, function (err, status, data) {
+		mockfunctions.mockshapeshiftstatus(depositAddress, function (err, status, data) {
+		//shapeshift.status(depositAddress, function (err, status, data) {
 		   if(status == "no_deposits"){ 
 		   	(counts.no_deposits == 0) ? process.stdout.write(chalk.dim('[' + moment().format('hh:mm:ss a') +']:	')+ "waiting for deposit		") : process.stdout.write(chalk.red("."));
 		   	 counts.no_deposits++;

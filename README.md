@@ -1,6 +1,6 @@
 attn: this repo is in alpha mode, use at your own risk.
 
-rapidshift (alpha v 0.0.1)
+rapidshift (alpha v 0.0.3)
 =====================
 
 simple nodejs cli that converts between cryptocurrencies
@@ -20,7 +20,17 @@ sudo npm link
 usage
 =====================
 ```bash
-rapidshift --destination 0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae --refund 12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX --pair btc_eth
+rapidshift --refund <your refund address> --destination <your withdrawl address> --pair <symbolOfSourceCoin_symbolOfDestinatinCoin> --[other options]
+```
+
+examples
+
+
+```bash
+rapidshift --refund  12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX --destination 0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae--pair btc_eth
+
+
+rapidshift --refund  1HLoD9E4SDFFPDiYfNYnkBLQ85Y51J3Zb1 --destination LSdTvMHRm8sScqwCi6x9wzYQae8JeZhx6y--pair btc_ltc --qrcode show
 ```
 
 help
@@ -29,16 +39,22 @@ help
 rapidshift --help
 
 
-  Usage: rapidshift [options]
+  Usage: rapidshift --refund <your refund address> --destination <your withdrawl address> --pair <symbolOfSourceCoin_symbolOfDestinatinCoin> --[other options] 
+
+
+	example 1 : rapidshift --refund  12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX --destination 0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae --pair btc_eth 
+	example 1 : rapidshift --refund  1HLoD9E4SDFFPDiYfNYnkBLQ85Y51J3Zb1 --destination LSdTvMHRm8sScqwCi6x9wzYQae8JeZhx6y --pair btc_ltc --qrcode show 
+
 
   Options:
 
-    -h, --help                              output usage information
-    -V, --version                           output the version number
-    -d, --destination <required>  The address where you want your funds sent after exchange.
-    -r, --refund <required>       The refund address
-    -x, --extra <optional>        The extra data required for special exchanges
-    -p, --pair <required>         The pair in conversion (e.g. bitcoin to ether; btc_eth)
+    -h, --help                                output usage information
+    -V, --version                             output the version number
+    -d, --destination <required>    address where you want your funds sent after exchange.
+    -r, --refund <required>         your refund address
+    -x, --extra <optional>          extra data required for special exchanges
+    -p, --pair <required>           pair in conversion (e.g. bitcoin to ether; btc_eth)
+    -q, --qrcode [show] <optional>  execute this if you want the qr codes to show up for payments.
 
 
 ```

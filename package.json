@@ -1,6 +1,6 @@
 {
   "name": "rapidshift",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "nodejs cli for automating enmasse shapeshift.io cryptocurrency exchange",
   "main": "index.js",
   "scripts": {
@@ -26,6 +26,7 @@
     "commander": "^2.9.0",
     "moment": "^2.12.0",
     "q": "^1.4.1",
+    "qrcode-terminal": "^0.10.0",
     "shapeshift.io": "^1.1.0",
     "superagent": "^1.8.3"
   }
