@@ -26,7 +26,7 @@ program
  .option('-p, --pair ' + chalk.red('<required>') ,'pair in conversion (e.g. bitcoin to ether; btc_eth)')
  .option('-q, --qrcode [show] ' + chalk.yellow('<optional>') , 'execute this if you want the qr codes to show up for payments.')
  .option('-m, --minimum [amount in USD] ' + chalk.yellow('<optional>'), 'if you only want to execute an exchange that is greater than a certian USD amount.')
- .option('-X, --mock [yes]' + chalk.yellow('<optional>'), 'use this to run a fake/mock execution [for devs only].')
+ .option('-X, --mock [yes] ' + chalk.yellow('<optional>'), 'use this to run a fake/mock execution [for devs only].')
  .parse(process.argv);
 
 console.log("");
@@ -185,7 +185,7 @@ function loopforcompletestatus(counts,callback){
 		   		loopforcompletestatus(counts,callback);
 		   }
 	  	})
-	},1500)
+	},((program.mock) ? 1000 : 15000) )
 }
 
 
