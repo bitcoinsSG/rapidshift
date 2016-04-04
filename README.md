@@ -23,7 +23,7 @@ usage
 rapidshift --refund <your refund address> --destination <your withdrawl address> --pair <symbolOfSourceCoin_symbolOfDestinatinCoin> --[other options]
 ```
 
-examples
+#####examples
 
 
 ```bash
@@ -32,6 +32,12 @@ rapidshift --refund  12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX --destination 0xde0b2956
 
 rapidshift --refund  1HLoD9E4SDFFPDiYfNYnkBLQ85Y51J3Zb1 --destination LSdTvMHRm8sScqwCi6x9wzYQae8JeZhx6y--pair btc_ltc --qrcode show
 ```
+
+#####screenshots
+
+
+![](http://i.imgur.com/blkWyqW.jpg)
+
 
 help
 =====================
