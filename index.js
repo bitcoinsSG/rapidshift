@@ -138,8 +138,7 @@ function printExchangeAfterExchange(){
 	console.log(printTemplates.printTimeStamp() + 
 		'actual cost per ' + accounting.destinationCoin.symbol.toLowerCase() + ' ' +'		$' + accounting.destinationCoin.priceCostAfterExchange_USD.toPrecision(utils.precision()) + ' or ' +
 		accounting.percentages.percentCostAfterExchange.toFixed(2) + '%' + ' of current price');
-	console.log(printTemplates.printTimeStamp() + 'cost of exchange' + '			$' + accounting.AfterExchangeStats.costForExchange.toPrecision(utils.precision()) +
-	 (' ').repeat(52)  + chalk.green('done') );
+	console.log(printTemplates.printTimeStamp() + 'cost of exchange' + '			$' + accounting.AfterExchangeStats.costForExchange.toPrecision(utils.precision())); //+  (' ').repeat(52)  + chalk.green('done') );
 	deferred.resolve();
 	return deferred.promise;
 }
