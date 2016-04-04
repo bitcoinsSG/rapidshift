@@ -33,7 +33,7 @@ rapidshift --refund  12c6DSiU4Rq3P4ZxziKxzrL5LmMBrzjrJX --destination 0xde0b2956
 rapidshift --refund  1HLoD9E4SDFFPDiYfNYnkBLQ85Y51J3Zb1 --destination LSdTvMHRm8sScqwCi6x9wzYQae8JeZhx6y--pair btc_ltc --qrcode show
 ```
 
-#####screenshots
+#####screenshot
 
 
 ![](http://i.imgur.com/blkWyqW.jpg)
