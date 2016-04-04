@@ -45,11 +45,17 @@ gchecks.checkall(program)
 .then(prepareForShiftApi)
 .then(shiftwithpromise)
 .then(function(){
-	loopforcompletestatus({ no_deposits: 0, received: 0, complete: 0}, function(){
-		printExchangeAfterExchange().then(function(){
+	loopforcompletestatus({ no_deposits: 0, received: 0, complete: 0}, function(returnedValue){
+		if(returnedValue){
 			console.log(printTemplates.printTimeStamp() + printTemplates.printHashes());
 			console.log("");
-		});
+		}
+		else{
+			printExchangeAfterExchange().then(function(){
+			console.log(printTemplates.printTimeStamp() + printTemplates.printHashes());
+			console.log("");
+			});
+		}
 	});
 })
 .catch(function(err){
@@ -76,8 +82,7 @@ function shiftwithpromise(options){
 	var _shapeshiftshift = (program.mock) ? mockfunctions.mockshapeshiftshift : shapeshift.shift;
 	_shapeshiftshift(program.destination, program.pair, options, function (err, returnData) {
 		if(err){
-			console.log('there was an error during shift');
-			console.log(err);
+			deferred.reject(err);
 		}
 		else{
 			  console.log( printTemplates.printTimeStamp()); 
@@ -163,6 +168,7 @@ function printExchangeInfoBeforeExchange(){
 
 function loopforcompletestatus(counts,callback){
 	var shift_status = "no_deposits";
+	var errorFlag = false;
 	var depositAddress = accounting.depositAddress;
 	var counts = counts || { no_deposits: 0, received: 0, complete: 0};
 	// this next if statetement could have been inside the loop, but want the delay in printing.
@@ -203,10 +209,14 @@ function loopforcompletestatus(counts,callback){
 
 		   }
 		   else{
-		   	console.log('error');
+		   	process.stdout.write("\n" + printTemplates.printTimeStamp()  +
+		   	"there was an " + chalk.bgRed(chalk.bold("error"))+", check		" +
+		   	chalk.bgRed(chalk.bold(accounting.refundAddress)) + " for a refund \n");
+		   	errorFlag = true;
+		   	callback((err)? err : 'error at shapshift');
 		   }
 		   shift_status = status;
-		   if( shift_status != "complete"){
+		   if( shift_status != "complete" && !(errorFlag)){
 		   		loopforcompletestatus(counts,callback);
 		   }
 	  	})

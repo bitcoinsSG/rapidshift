@@ -33,11 +33,17 @@ function mockshapeshiftstatus(depositAddress, callback){
 		count++;
 		callback(null,'no_deposits',{ status: 'no_deposits', address: '0x5abd5a30cb5bf24759c19db1cdc1082dd9c5b618' });
 	}
-	else if( count > (threshold-1) && count < (threshold*3)){
+	else if( count > (threshold-1) && count < (threshold*2)){
 		count++;
 		var receiveddata =  { status: 'received',  address: '1H4vW9wcgr5i6LVsYMTuz449ci7ZWSyX6F', incomingCoin: 0.1 ,incomingType: 'XMR' };
 		callback(null,'received',receiveddata);
 	}
+	//uncomment for simulating error during transaction
+	/*
+	else if(count > ((threshold*2)-1) && count < (threshold*3) ){
+		callback('error','error message',"error")
+
+	}*/
 	else if( count > ((threshold*3)-1)){
 		count = 0;
 		var completeddata = { status: 'complete', 
