@@ -1,7 +1,7 @@
 {
   "name": "rapidshift",
-  "version": "0.0.4",
-  "description": "nodejs cli for automating enmasse shapeshift.io cryptocurrency exchange",
+  "version": "0.0.5",
+  "description": "simple nodejs cli that converts between cryptocurrencies",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

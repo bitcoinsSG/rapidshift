@@ -1,6 +1,6 @@
 attn: this repo is in alpha mode, use at your own risk.
 
-rapidshift (alpha v 0.0.4)
+rapidshift (alpha v 0.0.5)
 =====================
 
 simple nodejs cli that converts between cryptocurrencies
