@@ -39,7 +39,9 @@ console.log(printTemplates.printTimeStamp() + chalk.dim('[' + moment().format('M
 	+ (' ').repeat(22) + 'rapidshift version ' + program._version + "(alpha)" +
 	 (' ').repeat(23) + chalk.dim('@bitcoinssg'));
 if(program.mock) console.log(printTemplates.printTimeStamp() + (' ').repeat(46) + chalk.cyan(chalk.bold("mock run")));
-gchecks.checkall(program)
+process.stdout.write(printTemplates.printTimeStamp() + 'validating' + (' ').repeat(26));
+gchecks.checkRequiredOptionsInExecution(program)
+.then(gchecks.checkall)
 .then(accounting.populateBeforeExchange)
 .then(printExchangeInfoBeforeExchange)
 .then(prepareForShiftApi)
