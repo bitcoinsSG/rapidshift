@@ -61,9 +61,9 @@ gchecks.checkRequiredOptionsInExecution(program)
 	});
 })
 .catch(function(err){
-	process.stdout.write("\n");
-	console.log(printTemplates.printTimeStamp() + chalk.bgRed('error		 	') +  chalk.bgRed(err))
-	process.stdout.write("\n");
+	console.log(printTemplates.printTimeStamp());
+	console.log(printTemplates.printTimeStamp() + chalk.red('error		 	') +  chalk.red(err))
+	console.log(printTemplates.printTimeStamp());
 	console.log(printTemplates.printTimeStamp() + printTemplates.printHashes());
 	console.log("");
 
