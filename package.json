@@ -1,6 +1,6 @@
 {
   "name": "rapidshift",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "simple nodejs cli that converts between cryptocurrencies",
   "main": "index.js",
   "scripts": {
