@@ -7,9 +7,14 @@ simple nodejs cli that converts between cryptocurrencies
 
 
 
-
-installation
+installation 
 =====================
+(simplest)
+```bash
+sudo npm install -g rapidshift 
+```
+
+(from source)
 ```bash
 git clone https://github.com/bitcoinsSG/rapidshift.git
 cd rapidshift

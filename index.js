@@ -36,8 +36,8 @@ if(program.mock) printTemplates.mock = true;
 console.log("");
 console.log(printTemplates.printTimeStamp() + printTemplates.printHashes());
 console.log(printTemplates.printTimeStamp() + chalk.dim('[' + moment().format('MMMM/DD/YY').toLowerCase() + ']') 
-	+ (' ').repeat(25) + 'rapidshift version ' + program._version +
-	 (' ').repeat(27) + chalk.dim('@bitcoinssg'));
+	+ (' ').repeat(22) + 'rapidshift version ' + program._version + "(alpha)" +
+	 (' ').repeat(23) + chalk.dim('@bitcoinssg'));
 if(program.mock) console.log(printTemplates.printTimeStamp() + (' ').repeat(46) + chalk.cyan(chalk.bold("mock run")));
 gchecks.checkall(program)
 .then(accounting.populateBeforeExchange)
